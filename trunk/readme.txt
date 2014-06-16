@@ -38,7 +38,9 @@ Most probably the logic text on one of your scripts is invalid PHP
 There is some confusion between the [Main Page and the front page](http://codex.wordpress.org/Conditional_Tags#The_Main_Page). If you want a script on your 'front page' whether that is a static page or a set of posts, use is_front_page(). If it is a page using is_page(x) does not work. If your 'front page' is a page and not a series of posts, you can still use is_home() to include scripts on that main posts page (as defined in Admin > Settings > Reading).
 
 == Screenshots ==
-NA
+
+1. screenshot-1.png
+2. screenshot-2.png
 
 == Writing Logic Code ==
 
