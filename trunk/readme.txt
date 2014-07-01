@@ -1,10 +1,10 @@
 === Script Logic ===
 Contributors: tahiryasin
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=63N6XHBLFRC3U
+Donate link: NA
 Tags: script, style, admin, conditional tags, speed, optimize
 Requires at least: 2.8
 Tested up to: 3.9.1
-Stable tag: 0.1
+Stable tag: 0.2
 License: GPLv2 or later
 
 Script Logic lets you control on which pages scripts and style sheets load using WP's conditional tags. 
