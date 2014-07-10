@@ -4,7 +4,7 @@
   Plugin Name: Script Logic
   Plugin URI: http://scriptbaker.com/script-logic
   Description: Control scripts & stylesheets with WP's conditional tags is_home etc
-  Version: 0.2
+  Version: 0.3
   Author: Tahir Yasin
   Author URI: http://scriptbaker.com/
  */
