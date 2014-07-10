@@ -102,7 +102,10 @@ if (!class_exists('sbScriptLogic')) :
                 if ($sl_settings = get_option($option_name))
                 {
                     $sl_settings = unserialize($sl_settings);
-                    $merged_queue = $sl_settings->queue + $wp_styles->queue;
+                    if(is_array($sl_settings->queue) && is_array($wp_styles->queue))
+                        $merged_queue = $sl_settings->queue + $wp_styles->queue;
+                    else
+                        $merged_queue = $wp_styles->queue;
                     $merged_registered = $sl_settings->registered + $wp_styles->registered;
                     $wp_styles->queue = array_unique($merged_queue);
                     $wp_styles->registered = $merged_registered;
@@ -152,7 +155,10 @@ if (!class_exists('sbScriptLogic')) :
                 if ($sl_settings = get_option($option_name))
                 {
                     $sl_settings = unserialize($sl_settings);
-                    $merged_queue = $sl_settings->queue + $wp_scripts->queue;
+                    if(is_array($sl_settings->queue) && is_array($wp_scripts->queue))
+                        $merged_queue = $sl_settings->queue + $wp_scripts->queue;
+                    else
+                        $merged_queue = $wp_scripts->queue;
                     $merged_registered = $sl_settings->registered + $wp_scripts->registered;
                     $wp_scripts->queue = array_unique($merged_queue);
                     $wp_scripts->registered = $merged_registered;
