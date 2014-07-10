@@ -4,7 +4,7 @@
   Plugin Name: Script Logic
   Plugin URI: http://scriptbaker.com/script-logic
   Description: Control scripts & stylesheets with WP's conditional tags is_home etc
-  Version: 0.2
+  Version: 0.3
   Author: Tahir Yasin
   Author URI: http://scriptbaker.com/
  */
@@ -102,7 +102,7 @@ if (!class_exists('sbScriptLogic')) :
                 if ($sl_settings = get_option($option_name))
                 {
                     $sl_settings = unserialize($sl_settings);
-                    if(is_array($sl_settings->queue))
+                    if(is_array($sl_settings->queue) && is_array($wp_styles->queue))
                         $merged_queue = $sl_settings->queue + $wp_styles->queue;
                     else
                         $merged_queue = $wp_styles->queue;
@@ -155,7 +155,7 @@ if (!class_exists('sbScriptLogic')) :
                 if ($sl_settings = get_option($option_name))
                 {
                     $sl_settings = unserialize($sl_settings);
-                    if(is_array($sl_settings->queue))
+                    if(is_array($sl_settings->queue) && is_array($wp_scripts->queue))
                         $merged_queue = $sl_settings->queue + $wp_scripts->queue;
                     else
                         $merged_queue = $wp_scripts->queue;
