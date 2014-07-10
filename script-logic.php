@@ -39,7 +39,7 @@ if (!class_exists('sbScriptLogic')) :
          */
         public static function file_path($file)
         {
-            return plugin_dir_path( __FILE__ ) . $file;
+            return plugin_dir_path(__FILE__) . $file;
         }
 
         /** hooking the plugin options/settings
@@ -62,7 +62,7 @@ if (!class_exists('sbScriptLogic')) :
             }
             return $input;
         }
-        
+
         /**
          * Usage: hooking (registering) the plugin menu
          */
@@ -102,12 +102,20 @@ if (!class_exists('sbScriptLogic')) :
                 if ($sl_settings = get_option($option_name))
                 {
                     $sl_settings = unserialize($sl_settings);
-                    if(is_array($sl_settings->queue) && is_array($wp_styles->queue))
+                    if (is_array($sl_settings->queue) && is_array($wp_styles->queue))
                         $merged_queue = $sl_settings->queue + $wp_styles->queue;
                     else
                         $merged_queue = $wp_styles->queue;
-                    $merged_registered = $sl_settings->registered + $wp_styles->registered;
-                    $wp_styles->queue = array_unique($merged_queue);
+                    if (is_array($sl_settings->registered) && is_array($wp_styles->registered))
+                        $merged_registered = $sl_settings->registered + $wp_styles->registered;
+                    else
+                        $merged_registered = $wp_styles->registered;
+                    
+                    if(is_array($merged_queue))
+                        $wp_styles->queue = array_unique($merged_queue);
+                    else
+                        $wp_styles->queue = array();
+                    
                     $wp_styles->registered = $merged_registered;
                     // The option already exists, so we just update it.
                     update_option($option_name, serialize($wp_styles));
@@ -117,26 +125,30 @@ if (!class_exists('sbScriptLogic')) :
                     add_option($option_name, serialize($wp_styles), null, 'no');
                 }
 
-
-                foreach ($wp_styles->queue as $handle)
+                if (!empty($wp_styles->queue))
                 {
-                    $sb_scriptlogic_val = get_option('sb_scriptlogic');
-                    if (!empty($sb_scriptlogic_val['style'][$handle]))
+                    foreach ($wp_styles->queue as $handle)
                     {
-                        $scriptLogic = stripslashes(trim($sb_scriptlogic_val['style'][$handle]));
-                        $scriptLogic = apply_filters("script_logic_eval_override", $scriptLogic);
-                        
-                        if ($scriptLogic===false)
-			{	wp_dequeue_style($handle);
-				continue;
-			}
-			if ($scriptLogic===true) continue;
-                        
-                        if (stristr($scriptLogic, "return") === false)
-                            $scriptLogic = "return (" . $scriptLogic . ");";
-                        if (!eval($scriptLogic))
+                        $sb_scriptlogic_val = get_option('sb_scriptlogic');
+                        if (!empty($sb_scriptlogic_val['style'][$handle]))
                         {
-                            wp_dequeue_style($handle);
+                            $scriptLogic = stripslashes(trim($sb_scriptlogic_val['style'][$handle]));
+                            $scriptLogic = apply_filters("script_logic_eval_override", $scriptLogic);
+
+                            if ($scriptLogic === false)
+                            {
+                                wp_dequeue_style($handle);
+                                continue;
+                            }
+                            if ($scriptLogic === true)
+                                continue;
+
+                            if (stristr($scriptLogic, "return") === false)
+                                $scriptLogic = "return (" . $scriptLogic . ");";
+                            if (!eval($scriptLogic))
+                            {
+                                wp_dequeue_style($handle);
+                            }
                         }
                     }
                 }
@@ -155,12 +167,18 @@ if (!class_exists('sbScriptLogic')) :
                 if ($sl_settings = get_option($option_name))
                 {
                     $sl_settings = unserialize($sl_settings);
-                    if(is_array($sl_settings->queue) && is_array($wp_scripts->queue))
+                    if (is_array($sl_settings->queue) && is_array($wp_scripts->queue))
                         $merged_queue = $sl_settings->queue + $wp_scripts->queue;
                     else
                         $merged_queue = $wp_scripts->queue;
-                    $merged_registered = $sl_settings->registered + $wp_scripts->registered;
-                    $wp_scripts->queue = array_unique($merged_queue);
+                    if (is_array($sl_settings->registered) && is_array($wp_scripts->registered))
+                        $merged_registered = $sl_settings->registered + $wp_scripts->registered;
+                    else
+                        $merged_registered = $wp_scripts->registered;
+                    if(is_array($merged_queue))
+                        $wp_scripts->queue = array_unique($merged_queue);
+                    else
+                        $wp_scripts->queue = array();
                     $wp_scripts->registered = $merged_registered;
                     // The option already exists, so we just update it.
                     update_option($option_name, serialize($wp_scripts));
@@ -171,25 +189,30 @@ if (!class_exists('sbScriptLogic')) :
                 }
 
 
-                foreach ($wp_scripts->queue as $handle)
+                if (!empty($wp_scripts->queue))
                 {
-                    $sb_scriptlogic_val = get_option('sb_scriptlogic');
-                    if (!empty($sb_scriptlogic_val['script'][$handle]))
+                    foreach ($wp_scripts->queue as $handle)
                     {
-                        $scriptLogic = stripslashes(trim($sb_scriptlogic_val['script'][$handle]));
-                        $scriptLogic = apply_filters("script_logic_eval_override", $scriptLogic);
-                        
-                        if ($scriptLogic===false)
-			{	wp_dequeue_script($handle);
-				continue;
-			}
-			if ($scriptLogic===true) continue;
-                        
-                        if (stristr($scriptLogic, "return") === false)
-                            $scriptLogic = "return (" . $scriptLogic . ");";
-                        if (!eval($scriptLogic))
+                        $sb_scriptlogic_val = get_option('sb_scriptlogic');
+                        if (!empty($sb_scriptlogic_val['script'][$handle]))
                         {
-                            wp_dequeue_script($handle);
+                            $scriptLogic = stripslashes(trim($sb_scriptlogic_val['script'][$handle]));
+                            $scriptLogic = apply_filters("script_logic_eval_override", $scriptLogic);
+
+                            if ($scriptLogic === false)
+                            {
+                                wp_dequeue_script($handle);
+                                continue;
+                            }
+                            if ($scriptLogic === true)
+                                continue;
+
+                            if (stristr($scriptLogic, "return") === false)
+                                $scriptLogic = "return (" . $scriptLogic . ");";
+                            if (!eval($scriptLogic))
+                            {
+                                wp_dequeue_script($handle);
+                            }
                         }
                     }
                 }
